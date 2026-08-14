@@ -5,7 +5,7 @@ import PublicRoute from "./components/PublicRoute";
 
 import ErrorPage from "./pages/ErrorPage";
 import SignUp from "./pages/SignUp";
-import LogIn from "./pages/LogIn";
+import Login from "./pages/Login";
 import Wall from "./pages/Wall";
 
 function App() {
@@ -13,7 +13,7 @@ function App() {
         <BrowserRouter>
             <Routes>
                 <Route element={<PublicRoute />}>
-                    <Route path="/log-in" element={<LogIn />} />
+                    <Route path="/log-in" element={<Login />} />
                     <Route path="/sign-up" element={<SignUp />} />
                 </Route>
 
