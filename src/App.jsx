@@ -4,7 +4,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
 
 import ErrorPage from "./pages/ErrorPage";
-import SignUp from "./pages/SignUp";
+import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Wall from "./pages/Wall";
 
@@ -13,17 +13,14 @@ function App() {
         <BrowserRouter>
             <Routes>
                 <Route element={<PublicRoute />}>
-                    <Route path="/log-in" element={<Login />} />
-                    <Route path="/sign-up" element={<SignUp />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/signup" element={<Signup />} />
                 </Route>
 
                 <Route element={<ProtectedRoute />}>
-                    <Route
-                        path="/"
-                        element={<Navigate to="/conversations" replace />}
-                    />
+                    <Route path="/" element={<Navigate to="/wall" replace />} />
 
-                    <Route path="/conversations" element={<Conversations />} />
+                    <Route path="/wall" element={<Wall />} />
                 </Route>
                 <Route path="*" element={<ErrorPage />} />
             </Routes>
