@@ -1,16 +1,45 @@
 import styled, { keyframes } from "styled-components";
+import { useState } from "react";
+import useAPI from "../hooks/useAPI";
 
-export default function SignUp() {
+export default function Signup() {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [username, setUsername] = useState("");
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+    const { signup } = useAPI();
+
+    async function handleSubmit(e) {
+        e.preventDefault();
+        setError("");
+        setLoading(true);
+
+        await signup({ email, password, username }, setError, setLoading);
+    }
+
     return (
         <>
             <StyledTitle>Murmur</StyledTitle>
             <StyledTitle>Sign Up</StyledTitle>
-            <StyledForm>
+            <StyledForm onSubmit={handleSubmit}>
+                {Array.isArray(error) ? (
+                    <ul>
+                        {error.map((errText, index) => (
+                            <ErrorMsg key={index}>{errText}</ErrorMsg>
+                        ))}
+                    </ul>
+                ) : (
+                    <ul>
+                        <ErrorMsg>{error}</ErrorMsg>
+                    </ul>
+                )}
                 <StyledInput
                     type="email"
                     name="email"
                     autoComplete="email"
                     placeholder="Email"
+                    onChange={(e) => setEmail(e.target.value)}
                     required
                 />
                 <StyledInput
@@ -18,13 +47,7 @@ export default function SignUp() {
                     name="password"
                     autoComplete="password"
                     placeholder="Password"
-                    required
-                />
-                <StyledInput
-                    type="text"
-                    name="name"
-                    autoComplete="name"
-                    placeholder="Name"
+                    onChange={(e) => setPassword(e.target.value)}
                     required
                 />
                 <StyledInput
@@ -32,12 +55,15 @@ export default function SignUp() {
                     name="username"
                     autoComplete="username"
                     placeholder="Username"
+                    onChange={(e) => setUsername(e.target.value)}
                     required
                 />
 
-                <StyledBtn type="submit">Sign Up</StyledBtn>
+                <StyledBtn type="submit" disabled={loading}>
+                    {loading ? <Spinner /> : "Sign Up"}
+                </StyledBtn>
                 <LogInText>
-                    Existing user? <LogInLink href="/log-in">Log In</LogInLink>
+                    Existing user? <LogInLink href="/login">Log In</LogInLink>
                 </LogInText>
             </StyledForm>
         </>
@@ -96,4 +122,25 @@ const LogInText = styled.p`
 
 const LogInLink = styled.a`
     color: #b676db;
+`;
+
+const ErrorMsg = styled.li`
+    color: #b82525;
+    padding: 0;
+    margin: 0;
+`;
+
+const spin = keyframes`
+  to {
+    transform: rotate(360deg);
+  }
+`;
+
+const Spinner = styled.div`
+    width: 18px;
+    height: 18px;
+    border: 2px solid #ffffff;
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: ${spin} 0.6s linear infinite;
 `;

@@ -5,7 +5,7 @@ export default function PublicRoute() {
     const isAuthenticated = isLoggedIn();
 
     if (!isAuthenticated) {
-        return <Navigate to="/log-in" replace />;
+        return <Navigate to="/login" replace />;
     }
 
     return <Outlet />;

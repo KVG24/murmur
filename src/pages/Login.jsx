@@ -1,6 +1,6 @@
 import styled, { keyframes } from "styled-components";
 
-export default function LogIn() {
+export default function Login() {
     return (
         <>
             <StyledTitle>Murmur</StyledTitle>
@@ -23,7 +23,7 @@ export default function LogIn() {
                 <StyledBtn type="submit">Log In</StyledBtn>
                 <SignUpText>
                     Not registered yet?{" "}
-                    <SignUpLink href="/sign-up">Sign Up</SignUpLink>
+                    <SignUpLink href="/signup">Sign Up</SignUpLink>
                 </SignUpText>
             </StyledForm>
         </>

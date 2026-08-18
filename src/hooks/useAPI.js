@@ -5,7 +5,7 @@ export default function useAPI() {
     const token = localStorage.getItem("jwtToken");
     const navigate = useNavigate();
 
-    const logIn = async (credentials, setError, setLoading) => {
+    const login = async (credentials, setError, setLoading) => {
         try {
             const response = await fetch(`${API_URL}/login`, {
                 method: "POST",
@@ -18,7 +18,6 @@ export default function useAPI() {
             const data = await response.json();
 
             if (!response.ok) throw new Error(data.message);
-
             localStorage.setItem("jwtToken", data.token);
             navigate("/");
         } catch (err) {
@@ -27,7 +26,7 @@ export default function useAPI() {
         }
     };
 
-    const signUp = async (credentials, setError, setLoading) => {
+    const signup = async (credentials, setError, setLoading) => {
         try {
             const response = await fetch(`${API_URL}/signup`, {
                 method: "POST",
@@ -39,9 +38,19 @@ export default function useAPI() {
 
             const data = await response.json();
 
-            if (!response.ok) throw new Error(data.message);
+            if (!response.ok) {
+                // If express-validator returned an array of errors
+                if (data.errors && Array.isArray(data.errors)) {
+                    const errorMessages = data.errors.map((err) => err.msg);
+                    setError(errorMessages);
+                } else {
+                    setError(data.message || "Registration failed");
+                }
+                setLoading(false);
+                return;
+            }
 
-            navigate("/log-in");
+            navigate("/login");
         } catch (err) {
             setError(err.message);
             setLoading(false);
@@ -49,7 +58,7 @@ export default function useAPI() {
     };
 
     return {
-        logIn,
-        signUp,
+        login,
+        signup,
     };
 }
