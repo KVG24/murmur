@@ -23,15 +23,15 @@ export default function Signup() {
             <StyledTitle>Murmur</StyledTitle>
             <StyledTitle>Sign Up</StyledTitle>
             <StyledForm onSubmit={handleSubmit}>
-                {Array.isArray(error) ? (
+                {error && (
                     <ul>
-                        {error.map((errText, index) => (
-                            <ErrorMsg key={index}>{errText}</ErrorMsg>
-                        ))}
-                    </ul>
-                ) : (
-                    <ul>
-                        <ErrorMsg>{error}</ErrorMsg>
+                        {Array.isArray(error) ? (
+                            error.map((errText, index) => (
+                                <ErrorMsg key={index}>{errText}</ErrorMsg>
+                            ))
+                        ) : (
+                            <ErrorMsg>{error}</ErrorMsg>
+                        )}
                     </ul>
                 )}
                 <StyledInput

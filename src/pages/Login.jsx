@@ -1,16 +1,34 @@
 import styled, { keyframes } from "styled-components";
+import { useState } from "react";
+import useAPI from "../hooks/useAPI";
 
 export default function Login() {
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+    const { login } = useAPI();
+
+    async function handleSubmit(e) {
+        e.preventDefault();
+        setError("");
+        setLoading(true);
+
+        await login({ username, password }, setError, setLoading);
+    }
+
     return (
         <>
             <StyledTitle>Murmur</StyledTitle>
             <StyledTitle>Log In</StyledTitle>
-            <StyledForm>
+            <StyledForm onSubmit={handleSubmit}>
+                <ErrorMsg>{error}</ErrorMsg>
                 <StyledInput
                     type="text"
                     name="username"
                     autoComplete="username"
                     placeholder="Username"
+                    onChange={(e) => setUsername(e.target.value)}
                     required
                 />
                 <StyledInput
@@ -18,9 +36,12 @@ export default function Login() {
                     name="password"
                     autoComplete="password"
                     placeholder="Password"
+                    onChange={(e) => setPassword(e.target.value)}
                     required
                 />
-                <StyledBtn type="submit">Log In</StyledBtn>
+                <StyledBtn type="submit" disabled={loading}>
+                    {loading ? <Spinner /> : "Log In"}
+                </StyledBtn>
                 <SignUpText>
                     Not registered yet?{" "}
                     <SignUpLink href="/signup">Sign Up</SignUpLink>
@@ -82,4 +103,25 @@ const SignUpText = styled.p`
 
 const SignUpLink = styled.a`
     color: #b676db;
+`;
+
+const ErrorMsg = styled.p`
+    color: #b82525;
+    padding: 0;
+    margin: 0;
+`;
+
+const spin = keyframes`
+  to {
+    transform: rotate(360deg);
+  }
+`;
+
+const Spinner = styled.div`
+    width: 18px;
+    height: 18px;
+    border: 2px solid #ffffff;
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: ${spin} 0.6s linear infinite;
 `;
