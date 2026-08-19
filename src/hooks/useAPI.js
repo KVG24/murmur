@@ -57,8 +57,22 @@ export default function useAPI() {
         }
     };
 
+    const getAllPosts = async () => {
+        try {
+            const response = await fetch(`${API_URL}/posts`, {
+                method: "GET",
+            });
+
+            const data = await response.json();
+            return data;
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
     return {
         login,
         signup,
+        getAllPosts,
     };
 }
