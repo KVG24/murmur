@@ -1,6 +1,7 @@
-import styled from "styled-components";
-import useAPI from "../hooks/useAPI";
 import { useState, useEffect } from "react";
+import useAPI from "../hooks/useAPI";
+import styled from "styled-components";
+import Post from "../components/Post";
 
 export default function Wall() {
     const [posts, setPosts] = useState([]);
@@ -18,11 +19,12 @@ export default function Wall() {
                 <h1>Murmur Wall</h1>
                 <PostsContainer>
                     {posts.map((post) => (
-                        <div key={post.id}>
-                            <h3>{post.authorId}</h3>
-                            <p>{post.content}</p>
-                            <p>{post.created}</p>
-                        </div>
+                        <Post
+                            key={post.id}
+                            author={post.author?.username}
+                            content={post.content}
+                            created={post.created}
+                        />
                     ))}
                 </PostsContainer>
             </Container>
@@ -41,5 +43,7 @@ const PostsContainer = styled.div`
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    border: 1px solid black;
+    border: 1px solid gray;
+    border-radius: 5px;
+    padding: 0.5rem;
 `;
