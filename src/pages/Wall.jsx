@@ -40,6 +40,7 @@ const Container = styled.div`
 `;
 
 const PostsContainer = styled.div`
+    max-width: 800px;
     display: flex;
     flex-direction: column;
     gap: 1rem;

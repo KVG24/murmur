@@ -10,6 +10,11 @@ export default function Post({ author, content, created }) {
                     <Created>{convertDate(created)}</Created>
                 </PostHeader>
                 <Content>{content}</Content>
+                <ButtonsContainer>
+                    {/* Add props for likes and comments when backend ready*/}
+                    <button type="button">❤️ 1357</button>
+                    <button type="button">💬 251</button>
+                </ButtonsContainer>
             </Container>
         </>
     );
@@ -20,14 +25,14 @@ const Container = styled.div`
     flex-direction: column;
     background-color: #333333;
     padding: 0.5rem;
-    border-radius: 5px;
+    border-radius: 10px;
 `;
 
 const PostHeader = styled.div`
     display: flex;
     justify-content: space-between;
     padding: 0.5rem;
-    border-radius: 5px;
+    border-radius: 10px;
     background-color: #4e4e4e;
 `;
 
@@ -44,4 +49,25 @@ const Content = styled.p`
 const Created = styled.p`
     font-size: 0.7rem;
     color: #ffffffb7;
+`;
+
+const ButtonsContainer = styled.div`
+    border-radius: 10px;
+    width: max-content;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+
+    & button {
+        background-color: #4e4e4e;
+        font-size: 1.5rem;
+        border-radius: 10px;
+        color: white;
+        transition: 0.2s;
+
+        &:hover {
+            background-color: #6b6b6b;
+        }
+    }
 `;
