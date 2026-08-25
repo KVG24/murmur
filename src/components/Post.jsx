@@ -1,19 +1,18 @@
 import styled from "styled-components";
 import convertDate from "../utils/convertDate";
 
-export default function Post({ author, content, created }) {
+export default function Post({ author, content, createdAt, likes, comments }) {
     return (
         <>
             <Container>
                 <PostHeader>
                     <Username>{author}</Username>
-                    <Created>{convertDate(created)}</Created>
+                    <Created>{convertDate(createdAt)}</Created>
                 </PostHeader>
                 <Content>{content}</Content>
                 <ButtonsContainer>
-                    {/* Add props for likes and comments when backend ready*/}
-                    <button type="button">❤️ 1357</button>
-                    <button type="button">💬 251</button>
+                    <button type="button">❤️ {likes}</button>
+                    <button type="button">💬 {comments}</button>
                 </ButtonsContainer>
             </Container>
         </>

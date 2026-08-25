@@ -23,7 +23,9 @@ export default function Wall() {
                             key={post.id}
                             author={post.author?.username}
                             content={post.content}
-                            created={post.created}
+                            createdAt={post.createdAt}
+                            likes={post._count.likes}
+                            comments={post._count.comments}
                         />
                     ))}
                 </PostsContainer>
