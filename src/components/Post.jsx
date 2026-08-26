@@ -1,7 +1,26 @@
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import convertDate from "../utils/convertDate";
 
-export default function Post({ author, content, createdAt, likes, comments }) {
+export default function Post({
+    author,
+    content,
+    createdAt,
+    likes,
+    comments,
+    postId,
+}) {
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        navigate(`/posts/${postId}`);
+    };
+
+    const handleLike = (e) => {
+        e.stopPropagation();
+        // Create like logic in useAPI and add it here
+    };
+
     return (
         <>
             <Container>
@@ -9,10 +28,12 @@ export default function Post({ author, content, createdAt, likes, comments }) {
                     <Username>{author}</Username>
                     <Created>{convertDate(createdAt)}</Created>
                 </PostHeader>
-                <Content>{content}</Content>
+                <Content onClick={handleClick}>{content}</Content>
                 <ButtonsContainer>
                     <button type="button">❤️ {likes}</button>
-                    <button type="button">💬 {comments}</button>
+                    <button type="button" onClick={handleClick}>
+                        💬 {comments}
+                    </button>
                 </ButtonsContainer>
             </Container>
         </>

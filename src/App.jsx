@@ -7,6 +7,7 @@ import ErrorPage from "./pages/ErrorPage";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Wall from "./pages/Wall";
+import PostPage from "./pages/PostPage";
 
 function App() {
     return (
@@ -19,8 +20,8 @@ function App() {
 
                 <Route element={<ProtectedRoute />}>
                     <Route path="/" element={<Navigate to="/wall" replace />} />
-
                     <Route path="/wall" element={<Wall />} />
+                    <Route path="/posts/:postId" element={<PostPage />} />
                 </Route>
                 <Route path="*" element={<ErrorPage />} />
             </Routes>

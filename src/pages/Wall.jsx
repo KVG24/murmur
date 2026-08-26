@@ -26,6 +26,7 @@ export default function Wall() {
                             createdAt={post.createdAt}
                             likes={post._count.likes}
                             comments={post._count.comments}
+                            postId={post.id}
                         />
                     ))}
                 </PostsContainer>
