@@ -2,18 +2,11 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import convertDate from "../utils/convertDate";
 
-export default function Post({
-    author,
-    content,
-    createdAt,
-    likes,
-    comments,
-    postId,
-}) {
+export default function Post({ post }) {
     const navigate = useNavigate();
 
     const handleClick = () => {
-        navigate(`/posts/${postId}`);
+        navigate(`/posts/${post.id}`);
     };
 
     const handleLike = (e) => {
@@ -25,14 +18,14 @@ export default function Post({
         <>
             <Container>
                 <PostHeader>
-                    <Username>{author}</Username>
-                    <Created>{convertDate(createdAt)}</Created>
+                    <Username>{post.author?.username}</Username>
+                    <Created>{convertDate(post.createdAt)}</Created>
                 </PostHeader>
-                <Content onClick={handleClick}>{content}</Content>
+                <Content onClick={handleClick}>{post.content}</Content>
                 <ButtonsContainer>
-                    <button type="button">❤️ {likes}</button>
+                    <button type="button">❤️ {post._count.likes}</button>
                     <button type="button" onClick={handleClick}>
-                        💬 {comments}
+                        💬 {post._count.comments}
                     </button>
                 </ButtonsContainer>
             </Container>

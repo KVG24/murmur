@@ -19,15 +19,7 @@ export default function Wall() {
                 <h1>Murmur Wall</h1>
                 <PostsContainer>
                     {posts.map((post) => (
-                        <Post
-                            key={post.id}
-                            author={post.author?.username}
-                            content={post.content}
-                            createdAt={post.createdAt}
-                            likes={post._count.likes}
-                            comments={post._count.comments}
-                            postId={post.id}
-                        />
+                        <Post key={post.id} post={post} />
                     ))}
                 </PostsContainer>
             </Container>
