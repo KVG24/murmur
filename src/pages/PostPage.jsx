@@ -4,6 +4,8 @@ import styled from "styled-components";
 import convertDate from "../utils/convertDate";
 import useAPI from "../hooks/useAPI";
 
+import Comment from "../components/Comment";
+
 export default function PostPage() {
     const { postId } = useParams();
     const { getPost } = useAPI();
@@ -49,9 +51,9 @@ export default function PostPage() {
                         <Username>
                             {post.author?.username || "Anonymous"}
                         </Username>
-                        <Created>
+                        <Date>
                             {convertDate(post.created || post.createdAt)}
-                        </Created>
+                        </Date>
                     </PostHeader>
                     <Content>{post.content}</Content>
                     <ButtonsContainer>
@@ -62,7 +64,11 @@ export default function PostPage() {
                             💬 {post._count?.comments ?? 0}
                         </button>
                     </ButtonsContainer>
-                    {/* Add comment component and map() post comments here*/}
+                    <CommentsContainer>
+                        {post.comments.map((comment) => (
+                            <Comment key={comment.id} comment={comment} />
+                        ))}
+                    </CommentsContainer>
                 </PostContainer>
             </Container>
         </>
@@ -79,6 +85,7 @@ const Container = styled.div`
 const PostContainer = styled.div`
     width: 800px;
     display: flex;
+    gap: 0.5rem;
     flex-direction: column;
     background-color: #333333;
     padding: 0.5rem;
@@ -103,7 +110,7 @@ const Content = styled.p`
     font-size: 1rem;
 `;
 
-const Created = styled.p`
+const Date = styled.p`
     font-size: 0.7rem;
     color: #ffffffb7;
 `;
@@ -128,6 +135,13 @@ const ButtonsContainer = styled.div`
             background-color: #6b6b6b;
         }
     }
+`;
+
+const CommentsContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    border-top: 3px solid #707070;
 `;
 
 const BackButton = styled.div`

@@ -19,7 +19,7 @@ export default function Post({ post }) {
             <Container>
                 <PostHeader>
                     <Username>{post.author?.username}</Username>
-                    <Created>{convertDate(post.createdAt)}</Created>
+                    <Date>{convertDate(post.createdAt)}</Date>
                 </PostHeader>
                 <Content onClick={handleClick}>{post.content}</Content>
                 <ButtonsContainer>
@@ -59,7 +59,7 @@ const Content = styled.p`
     font-size: 1rem;
 `;
 
-const Created = styled.p`
+const Date = styled.p`
     font-size: 0.7rem;
     color: #ffffffb7;
 `;
