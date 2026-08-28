@@ -83,10 +83,28 @@ export default function useAPI() {
         }
     };
 
+    const likePost = async (postId) => {
+        try {
+            const token = localStorage.getItem("jwtToken");
+            const response = await fetch(`${API_URL}/posts/like/${postId}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            if (!response.ok) throw new Error("Failed to like post");
+            return await response.json();
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
     return {
         login,
         signup,
         getAllPosts,
         getPost,
+        likePost,
     };
 }

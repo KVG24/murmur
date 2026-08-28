@@ -8,7 +8,7 @@ import Comment from "../components/Comment";
 
 export default function PostPage() {
     const { postId } = useParams();
-    const { getPost } = useAPI();
+    const { getPost, likePost } = useAPI();
     const navigate = useNavigate();
 
     const [post, setPost] = useState(null);
@@ -29,9 +29,27 @@ export default function PostPage() {
         navigate(`/wall`);
     };
 
-    const handleLike = (e) => {
+    const handleLike = async (e, id) => {
         e.stopPropagation();
-        // Create like logic in useAPI and add it here
+
+        // Increment local state
+        setPost((prev) => ({
+            ...prev,
+            _count: {
+                ...prev._count,
+                likes: (prev._count?.likes ?? 0) + 1,
+            },
+        }));
+
+        // Send backend request
+        const result = await likePost(id);
+
+        // If error occurs, revert state
+        if (!result) {
+            getPost(postId).then(setPost);
+        }
+
+        // To do: add ability to "delete" like from db and update local state on second click
     };
 
     if (loading) {
@@ -57,7 +75,12 @@ export default function PostPage() {
                     </PostHeader>
                     <Content>{post.content}</Content>
                     <ButtonsContainer>
-                        <button type="button" onClick={handleLike}>
+                        <button
+                            type="button"
+                            onClick={(e) => {
+                                handleLike(e, post.id);
+                            }}
+                        >
                             ❤️ {post._count?.likes ?? 0}
                         </button>
                         <button type="button">
