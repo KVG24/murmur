@@ -63,8 +63,8 @@ export default function useAPI() {
                 method: "GET",
             });
 
-            const data = await response.json();
-            return data;
+            if (!response.ok) throw new Error("Failed to fetch all posts");
+            return await response.json();
         } catch (err) {
             console.log(err);
         }
@@ -76,8 +76,26 @@ export default function useAPI() {
                 method: "GET",
             });
 
-            const data = await response.json();
-            return data;
+            if (!response.ok) throw new Error("Failed to fetch a post");
+            return await response.json();
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const getUserLikes = async () => {
+        try {
+            const token = localStorage.getItem("jwtToken");
+            const response = await fetch(`${API_URL}/posts/likes`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (!response.ok) throw new Error("Failed to fetch user likes");
+            return await response.json();
         } catch (err) {
             console.log(err);
         }
@@ -93,7 +111,26 @@ export default function useAPI() {
                     Authorization: `Bearer ${token}`,
                 },
             });
+
             if (!response.ok) throw new Error("Failed to like post");
+            return await response.json();
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const unlikePost = async (postId) => {
+        try {
+            const token = localStorage.getItem("jwtToken");
+            const response = await fetch(`${API_URL}/posts/like/${postId}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (!response.ok) throw new Error("Failed to unlike post");
             return await response.json();
         } catch (err) {
             console.log(err);
@@ -105,6 +142,8 @@ export default function useAPI() {
         signup,
         getAllPosts,
         getPost,
+        getUserLikes,
         likePost,
+        unlikePost,
     };
 }
