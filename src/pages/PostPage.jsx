@@ -2,16 +2,19 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import convertDate from "../utils/convertDate";
+import getCurrentUserId from "../utils/getCurrentUserId";
 import useAPI from "../hooks/useAPI";
 
 import Comment from "../components/Comment";
 
 export default function PostPage() {
     const { postId } = useParams();
-    const { getPost, likePost } = useAPI();
+    const { getPost, likePost, unlikePost } = useAPI();
     const navigate = useNavigate();
 
     const [post, setPost] = useState(null);
+    const [userId, setUserId] = useState(null);
+    const [liked, setLiked] = useState(false);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -19,6 +22,20 @@ export default function PostPage() {
         getPost(postId)
             .then((data) => {
                 setPost(data);
+
+                const currentUserId = getCurrentUserId();
+                setUserId(currentUserId);
+
+                if (data?.likes && currentUserId) {
+                    const isLiked = data.likes.some(
+                        (like) => Number(like.userId) === Number(currentUserId),
+                    );
+                    setLiked(isLiked);
+                } else {
+                    setLiked(false);
+                }
+
+                console.log(liked);
             })
             .finally(() => {
                 setLoading(false);
@@ -32,24 +49,43 @@ export default function PostPage() {
     const handleLike = async (e, id) => {
         e.stopPropagation();
 
-        // Increment local state
-        setPost((prev) => ({
-            ...prev,
-            _count: {
-                ...prev._count,
-                likes: (prev._count?.likes ?? 0) + 1,
-            },
-        }));
+        if (liked == false) {
+            setPost((prev) => ({
+                ...prev,
+                _count: {
+                    ...prev._count,
+                    likes: (prev._count?.likes ?? 0) + 1,
+                },
+            }));
 
-        // Send backend request
-        const result = await likePost(id);
+            setLiked(true);
 
-        // If error occurs, revert state
-        if (!result) {
-            getPost(postId).then(setPost);
+            // Send backend request to add like
+            const result = await likePost(id);
+
+            // If error occurs, revert state
+            if (!result) {
+                getPost(postId).then(setPost);
+            }
+        } else {
+            setPost((prev) => ({
+                ...prev,
+                _count: {
+                    ...prev._count,
+                    likes: (prev._count?.likes ?? 0) - 1,
+                },
+            }));
+
+            setLiked(false);
+
+            // Send backend request to remove like
+            const result = await unlikePost(id);
+
+            // If error occurs, revert state
+            if (!result) {
+                getPost(postId).then(setPost);
+            }
         }
-
-        // To do: add ability to "delete" like from db and update local state on second click
     };
 
     if (loading) {
@@ -75,17 +111,18 @@ export default function PostPage() {
                     </PostHeader>
                     <Content>{post.content}</Content>
                     <ButtonsContainer>
-                        <button
+                        <LikeButton
+                            $liked={liked}
                             type="button"
                             onClick={(e) => {
                                 handleLike(e, post.id);
                             }}
                         >
                             ❤️ {post._count?.likes ?? 0}
-                        </button>
-                        <button type="button">
+                        </LikeButton>
+                        <CommentButton type="button">
                             💬 {post._count?.comments ?? 0}
-                        </button>
+                        </CommentButton>
                     </ButtonsContainer>
                     <CommentsContainer>
                         {post.comments.map((comment) => (
@@ -145,18 +182,31 @@ const ButtonsContainer = styled.div`
     gap: 1rem;
     align-items: center;
     justify-content: space-between;
+`;
 
-    & button {
-        background-color: #4e4e4e;
-        font-size: 1.5rem;
-        border-radius: 10px;
-        color: white;
-        transition: 0.2s;
-        cursor: pointer;
+const CommentButton = styled.button`
+    background-color: #4e4e4e;
+    font-size: 1.5rem;
+    border-radius: 10px;
+    color: white;
+    transition: 0.2s;
+    cursor: pointer;
 
-        &:hover {
-            background-color: #6b6b6b;
-        }
+    &:hover {
+        background-color: #6b6b6b;
+    }
+`;
+
+const LikeButton = styled.button`
+    background-color: ${(props) => (props.$liked ? "#471010" : "#4e4e4e")};
+    font-size: 1.5rem;
+    border-radius: 10px;
+    color: white;
+    transition: 0.2s;
+    cursor: pointer;
+
+    &:hover {
+        background-color: ${(props) => (props.$liked ? "#751a1a" : "#6b6b6b")};
     }
 `;
 

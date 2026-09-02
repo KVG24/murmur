@@ -123,7 +123,7 @@ export default function useAPI() {
         try {
             const token = localStorage.getItem("jwtToken");
             const response = await fetch(`${API_URL}/posts/like/${postId}`, {
-                method: "POST",
+                method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
