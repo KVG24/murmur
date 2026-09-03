@@ -34,8 +34,6 @@ export default function PostPage() {
                 } else {
                     setLiked(false);
                 }
-
-                console.log(liked);
             })
             .finally(() => {
                 setLoading(false);
