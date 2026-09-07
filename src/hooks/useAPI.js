@@ -85,7 +85,6 @@ export default function useAPI() {
 
     const getUserLikes = async () => {
         try {
-            const token = localStorage.getItem("jwtToken");
             const response = await fetch(`${API_URL}/posts/likes`, {
                 method: "GET",
                 headers: {
@@ -103,7 +102,6 @@ export default function useAPI() {
 
     const likePost = async (postId) => {
         try {
-            const token = localStorage.getItem("jwtToken");
             const response = await fetch(`${API_URL}/posts/like/${postId}`, {
                 method: "POST",
                 headers: {
@@ -121,7 +119,6 @@ export default function useAPI() {
 
     const unlikePost = async (postId) => {
         try {
-            const token = localStorage.getItem("jwtToken");
             const response = await fetch(`${API_URL}/posts/like/${postId}`, {
                 method: "DELETE",
                 headers: {
@@ -137,6 +134,27 @@ export default function useAPI() {
         }
     };
 
+    const createComment = async (postId, content) => {
+        try {
+            const response = await fetch(
+                `${API_URL}/posts/comments/${postId}`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify(content),
+                },
+            );
+
+            if (!response.ok) throw new Error("Failed to create comment");
+            return await response.json();
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
     return {
         login,
         signup,
@@ -145,5 +163,6 @@ export default function useAPI() {
         getUserLikes,
         likePost,
         unlikePost,
+        createComment,
     };
 }

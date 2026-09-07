@@ -9,13 +9,14 @@ import Comment from "../components/Comment";
 
 export default function PostPage() {
     const { postId } = useParams();
-    const { getPost, likePost, unlikePost } = useAPI();
+    const { getPost, likePost, unlikePost, createComment } = useAPI();
     const navigate = useNavigate();
 
     const [post, setPost] = useState(null);
     const [userId, setUserId] = useState(null);
     const [liked, setLiked] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [commentText, setCommentText] = useState("");
 
     useEffect(() => {
         setLoading(true);
@@ -86,6 +87,17 @@ export default function PostPage() {
         }
     };
 
+    const handleCreateComment = async (e, content) => {
+        e.preventDefault();
+        try {
+            if (!commentText) return null;
+            await createComment(postId, { content: commentText });
+            setCommentText("");
+        } catch (err) {
+            console.error("Failed to send a new comment", err);
+        }
+    };
+
     if (loading) {
         return <Container>Loading post...</Container>;
     }
@@ -122,6 +134,17 @@ export default function PostPage() {
                             💬 {post._count?.comments ?? 0}
                         </CommentButton>
                     </ButtonsContainer>
+                    <CommentForm onSubmit={handleCreateComment}>
+                        <CommentInput
+                            type="text"
+                            placeholder="Your thoughts?"
+                            value={commentText}
+                            onChange={(e) => setCommentText(e.target.value)}
+                        />
+                        <SubmitCommentButton type="submit">
+                            Post
+                        </SubmitCommentButton>
+                    </CommentForm>
                     <CommentsContainer>
                         {post.comments.map((comment) => (
                             <Comment key={comment.id} comment={comment} />
@@ -205,6 +228,39 @@ const LikeButton = styled.button`
 
     &:hover {
         background-color: ${(props) => (props.$liked ? "#751a1a" : "#6b6b6b")};
+    }
+`;
+
+const CommentForm = styled.form`
+    border-top: 3px solid #707070;
+    padding-top: 0.7rem;
+    display: flex;
+    gap: 10px;
+`;
+
+const CommentInput = styled.input`
+    width: 100%;
+    background-color: #a09f9f;
+    border: none;
+    font-size: 1rem;
+    padding: 0.5rem;
+
+    &::placeholder {
+        color: #00000099;
+    }
+`;
+
+const SubmitCommentButton = styled.button`
+    background-color: #4e4e4e;
+    padding: 0.5rem;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    transition: 0.2s;
+
+    &:hover {
+        background-color: #636363;
     }
 `;
 
